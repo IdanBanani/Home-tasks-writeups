@@ -1,4 +1,5 @@
-** Rafael- [Hebrew writeup] + IDA PRO analysis & scripts**
+*Hebrew writeup (I was asked to use Hebrew)*
+**Rafael - + IDA PRO analysis & scripts**
 
 ***Reverse engineering + Binary exploitation task***
 
