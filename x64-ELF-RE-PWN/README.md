@@ -1,6 +1,6 @@
 *Hebrew writeup (I was asked to use Hebrew)*  
 
-**Rafael - + IDA PRO analysis & scripts**
+**Rafael - PDF writeup + IDA PRO analysis & Python scripts**
 
 ***Reverse engineering + Binary exploitation task***
 
