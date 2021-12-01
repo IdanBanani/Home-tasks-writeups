@@ -1,4 +1,4 @@
-# The task definitions
+# The task definition
 
 Using the wikipedia page for List of animal names, write a python program that will output all of the “collateral adjectives” and all of the “animals” which belong to it. If an animal has more than one collateral adjective, use all of them (mentioning it more than once).
 
