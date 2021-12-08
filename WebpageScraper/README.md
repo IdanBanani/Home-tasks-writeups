@@ -71,7 +71,14 @@ Using OOP in Python is a matter of taste and not a must.
 
 # Results:
 - Latest Async implementation -**114 seconds < 2 minutes including downloading all the images (677 MB)**, 1.5 sec for parsing with caching and about 30  seconds or less for getting all animals pages for extracting images links without downloading the images. (I didn't benchmark it after optimizations due to code modifications such as caching images names according to the animal name)   
-- 
+
+## Running the code (V3-Async On Linux):
+```
+pip install pipenv  
+pipenv shell  
+pipenv install -r requirements.txt
+python3 main.py
+```
 ---------------------
 ## TODO: 
 - Can we benefit from inheritance (OOP) in this case?
