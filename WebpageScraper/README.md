@@ -52,21 +52,32 @@ We will Identify what specific tasks should be done sequentially (non-asynchrono
 
 N = Number of listed animals on the wikipedia page
 
-Time complexity:  O(N) + O(Max(image_download_times)) [The async part]
-Space complexity: O(N) [One record for each animal]
+**Time complexity:**  
+Async solution: O(N) + O(Max(image_download_times)) [The async part]  
+Async+Multiprocessing solution (theoretically better) : O(Max(CPU_BOUND_TASKS))+O(Max(IO_BOUND_TASKS))
+
+**Space complexity:** O(N) [One record for each animal]
 
 # Design & rules of thumbs
 Use one or more from the well trusted software design principles
 (SOLID,Clean-code, KISS etc.) for the main business logic.
 
 **Premature optimization is the root of all evil (or at least most of it) in programming** - We'll aim to first build something that works, and only then try to improve it if there's a need.  
+
 But there's a trade-off in our case:  
-While fixing bugs is easier with a single threaded synchronic application (Otherwise Pycharm might go crazy with bouncing back and forth between breakpoints), Identifying the anomalies/errors where edge cases are not handled properly is much faster when using async programming for executing all the requests in a short time while watching the log output (The main bottleneck here is the IO bound operations) 
+While fixing bugs is easier with a single threaded synchronic application (Otherwise debugging might go crazy with bouncing back and forth between breakpoints/asyncio mini-threads), Identifying the anomalies/errors where edge cases are not handled properly is much faster when using async programming for executing all the requests in a short time (The main bottleneck here is the Network IO bound operations) 
 
 Using OOP in Python is a matter of taste and not a must.
-#TODO: How would you give the "request sender function" access to the session object in a smart way without using classes?
 
-#TODO: Can we benefit from inheritance? what about seperating the API from the implementation?
+# Results:
+- Latest Async implementation -**114 seconds < 2 minutes including downloading all the images (677 MB)**, 1.5 sec for parsing with caching and about 30  seconds or less for getting all animals pages for extracting images links without downloading the images. (I didn't benchmark it after optimizations due to code modifications such as caching images names according to the animal name)   
+- 
+---------------------
+## TODO: 
+- Can we benefit from inheritance (OOP) in this case?
+- How would you give the "requests sender function" access to the session object in a smart way? (sharing a datastructure without using global variable / class attribute)   
+- Is it possible here to seperate the API from the implementation?
+- Would you seperate the generic "utilities" from the specific "Wikipedia"/"Animals page parser" code?
 
 ## Testing
 Pytest might don't work properly with async code.
@@ -74,7 +85,7 @@ Pytest might don't work properly with async code.
 
 ## Optimizations
 * grequests - too old/unstable but seems to be a "quick and dirty" solution
-* multiprocessing.apply_async - [Documentation](https://docs.python.org/3/library/multiprocessing.html), [StackOverflow thread](https://stackoverflow.com/questions/8533318/multiprocessing-pool-when-to-use-apply-apply-async-or-map) - seems to solve the constraint of having to change the whole code in order to work asynchronously.
+* multiprocessing.apply_async / or equivalent from the more recommended: concurrent.futures.ProcessPoolExecutor() () - [Documentation](https://docs.python.org/3/library/multiprocessing.html), [StackOverflow thread](https://stackoverflow.com/questions/8533318/multiprocessing-pool-when-to-use-apply-apply-async-or-map) - seems to solve the constraint of having to change the whole code in order to work asynchronously.
 * aiohttp - used here as an async http requests library
 * aiofiles - used here as an async File I/O operation library 
 * uvloop - using it's event-loop instead of asyncio's main_loop (more suitable for production environment) [Doesn't support Windows!]

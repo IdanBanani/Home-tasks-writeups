@@ -1,14 +1,11 @@
-"""
-Logger facility module for the application.
-"""
+"""Logger facility module for the application."""
 import logging
-from logging.handlers import RotatingFileHandler # TODO: why can't I use logging.handlers.RotatingFileHandler?
+from logging.handlers import RotatingFileHandler  # TODO: why can't I use logging.handlers.RotatingFileHandler?
 import sys
 import settings
 
-#TODO: use logging.basicConfig instead?
 
-
+# TODO: use logging.basicConfig instead?
 class Logger:
     def __init__(self, name):
         self.__name = name
@@ -32,11 +29,10 @@ class Logger:
         self.__logger.addHandler(rotating_file_handler)
 
         # We will also write the log messages to stderr
-        self.__logger.addHandler(logging.StreamHandler(stream=sys.stderr)) #TODO: is this the right way to do it?
+        self.__logger.addHandler(logging.StreamHandler(stream=sys.stderr))  # TODO: is this the right way to do it?
         # self.__logger.addHandler(logging.StreamHandler(stream=sys.stdout))
 
-
-    #TODO: seems like there is a better way (e.g. using decorators) to do this
+    # TODO: seems like there is a better way (e.g. using decorators) to do this
     def debug(self, msg):
         self.__logger.debug(msg)
 
