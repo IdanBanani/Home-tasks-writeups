@@ -73,16 +73,19 @@ Pytest might don't work properly with async code.
 * pytest-asyncio (v0.16.0)
 
 ## Optimizations
-* aiohttp
-* aiofiles
-* uvloop loop instead of asyncio's main_loop (more suitable for production environment)
-* aiomultiprocess (v0.9.0)
+* grequests - too old/unstable but seems to be a "quick and dirty" solution
+* multiprocessing.apply_async - [Documentation](https://docs.python.org/3/library/multiprocessing.html), [StackOverflow thread](https://stackoverflow.com/questions/8533318/multiprocessing-pool-when-to-use-apply-apply-async-or-map) - seems to solve the constraint of having to change the whole code in order to work asynchronously.
+* aiohttp - used here as an async http requests library
+* aiofiles - used here as an async File I/O operation library 
+* uvloop - using it's event-loop instead of asyncio's main_loop (more suitable for production environment) [Doesn't support Windows!]
+* aiomultiprocess (v0.9.0) - ?
 * [unsync - Unsynchronize asyncio by using an ambient event loop, or executing in separate threads or processes.](https://github.com/alex-sherman/unsync/)
 
 ## Reducing boilerplate code / Doing it easier & faster
 * Trio
 * AnyIO 
 * Fastapi (while probabely having to run it as a **web server app** due to the "routing requests" API mechanism)
-
+* [https](Example for using wikipediaapi library + grequests)://github.com/DanOren/Web_Scraping_Project_ITC/blob/main/URL_scraper.py
+* 
 ## Trade-offs
 
