@@ -85,7 +85,12 @@ Pytest might don't work properly with async code.
 * Trio
 * AnyIO 
 * Fastapi (while probabely having to run it as a **web server app** due to the "routing requests" API mechanism)
-* [https](Example for using wikipediaapi library + grequests)://github.com/DanOren/Web_Scraping_Project_ITC/blob/main/URL_scraper.py
+* [Example for using wikipediaapi library + grequests](https://github.com/DanOren/Web_Scraping_Project_ITC/blob/main/URL_scraper.py)
 * 
 ## Trade-offs
+
+
+Aiomultiprocess:  
+![image](https://user-images.githubusercontent.com/26879273/145200762-d4ac346c-a7d0-4fa1-8979-0f34eb351f82.png)
+
 
