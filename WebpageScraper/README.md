@@ -1,3 +1,5 @@
+![1553 1593611237](https://user-images.githubusercontent.com/26879273/145428275-43886795-c540-4b16-a527-1f766b733185.png)
+
 # The task definition
 
 Using the wikipedia page for List of animal names, write a python program that will output all of the “collateral adjectives” and all of the “animals” which belong to it.  
