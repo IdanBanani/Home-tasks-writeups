@@ -16,6 +16,8 @@ Tips: Feel free to use BeautifulSoup and Requests, and please avoid pandas if yo
 First of all, we will translate the system/functional requirements into coding terms.
 Lets try to recognize the elements and divide the work into subtasks:
 
+![33311](https://user-images.githubusercontent.com/26879273/145437484-5cdc6cc8-5ccd-4793-8dbf-920570ab27d1.png)
+
 In our main/worker/daemon thread do the following:
 ----------------------------------------------------------------
 1. Download the main wiki webpage "object" 
