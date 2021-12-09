@@ -109,6 +109,8 @@ Pytest might won't work properly with async code.
 * AnyIO 
 * Fastapi (while probabely having to run it as a **web server app** due to the "routing requests" API mechanism)
 * [Example for using wikipediaapi library + grequests](https://github.com/DanOren/Web_Scraping_Project_ITC/blob/main/URL_scraper.py)
+* [non-official aiocollections](https://github.com/bharel/aiocollections)
+
 ## Trade-offs
 
 
