@@ -101,6 +101,8 @@ Pytest might won't work properly with async code.
 * uvloop - using it's event-loop instead of asyncio's main_loop (more suitable for production environment) [Doesn't support Windows!]
 * aiomultiprocess (v0.9.0) - ?
 * [unsync - Unsynchronize asyncio by using an ambient event loop, or executing in separate threads or processes.](https://github.com/alex-sherman/unsync/)
+* Scrapy - (For large scale project. Not everyone likes this library) - An open source and collaborative framework for extracting the data you need from websites. In a fast, simple, yet extensible way. Scrapy is a fast high-level web crawling and web scraping framework, used to crawl websites and extract structured data from their pages. It can be used for a wide range of purposes, from data mining to monitoring and automated testing.
+
 
 ## Reducing boilerplate code / Doing it easier & faster and maybe even give better performance
 * Trio
