@@ -112,7 +112,11 @@ Pytest might won't work properly with async code.
 ## Trade-offs
 
 
-The aiomultiprocess pitch:  
+## Appendix
+#### System design principles & production level programming with Python :
+- [Advanced system design - TAU Course by Dan Gittik (too bad he didn't release all the code files](https://advanced-system-design.com/lessons/)  
+
+### The aiomultiprocess pitch:  
 ![image](https://user-images.githubusercontent.com/26879273/145200762-d4ac346c-a7d0-4fa1-8979-0f34eb351f82.png)
 
 
