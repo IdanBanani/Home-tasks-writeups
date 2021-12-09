@@ -1,9 +1,7 @@
 # The task definition
 
-Using the wikipedia page for List of animal names, write a python program that will output all of the “collateral adjectives” and all of the “animals” which belong to it. If an animal has more than one collateral adjective, use all of them (mentioning it more than once).
-
-- How much time did it take you to write this ?
-- What’s the time complexity of the program you just wrote ?
+Using the wikipedia page for List of animal names, write a python program that will output all of the “collateral adjectives” and all of the “animals” which belong to it.  
+If an animal has more than one collateral adjective, use all of them (mentioning it more than once).
 
 Bonus work (choose whether and as many as you like):
 - Download the picture of each animal into /tmp/ and add a local link when displaying the animals.
@@ -14,27 +12,29 @@ Tips: Feel free to use BeautifulSoup and Requests, and please avoid pandas if yo
 
 # How to approach this?
 First of all, we will translate the system/functional requirements into coding terms.
-
 Lets try to recognize the elements and divide the work into subtasks:
 
-In our main thread, do the following:
+In our main/worker/daemon thread do the following:
 ----------------------------------------------------------------
 1. Download the main wiki webpage "object" 
-2. Create a beautiful soup object form its content ("raw bytes") or text (or try working with json format?)
-3. Extract the relevant table element (#TODO: If the table was gigantic, would it affect our strategy due to memory considarations?)
+2. Create a beautiful soup object form its content/text 
+3. Extract the relevant table element 
 
-Since the information is arranged in HTML rows (There's no direct access to coloumns), we will do the same operation for all of the data rows:  
-----
+Since the information is arranged in a HTML Table rows (There's no direct access to coloumns), we will do the same operation for all of the data rows:  
+
+#TODO: If the table was gigantic, would it affect our program due to memory considarations? - (getting the whole page/table content at once vs reading it in chunks) )
+
+
 Given a row:  
 --
-1. Extract & Save the items of our interest: Animal name, its image link (Either average quality image link using a tool like Selenium webdriver to hover over the animal name to make a pop-up appear OR a high resolution one linked from the animal's wikipedia page) and its Collateral adjective to a local storage / DB in which the key is the Collateral adjective and the values are references to its matching animals records (In our case, they contain name + link to its locally hosted image)
+1. Extract & Save the items of our interest: Animal name, its image link (Either average quality image link using a tool like Selenium webdriver to hover over the animal name to make a pop-up appear OR a high resolution one linked from the animal's wikipedia page) and its Collateral adjective to a local storage / DB in which the key is the Collateral adjective and the values are references to its matching animals records (In our case, they contain name + path to its locally hosted image)
 2. Download its animal image (direct/indirect) to folder /tmp (Linux) or %temp% on Windows
-3. Save the link to the downloaded image in the local DB (to the animal record)
+3. Save the path to the downloaded image in the local DB (to the animal record)
 
 Once we finished updating the Database:
 --
 1. Plot to the screen the DB "Group by" query as instructed
-2. Crate a HTML format output file showcasing the results
+2. Crate an HTML format output file showcasing the results including images
 
 # Performance considarations:
 Implementing this program naively will cost us a lot of wasted time.
@@ -42,21 +42,22 @@ The steps we can take in order to do more work in less time:
 
 We will Identify what specific tasks should be done sequentially (non-asynchronously), what tasks requests can be done asynchronously (not waiting for a similar request to receive its respone before dispatching another one) and where can we implement concurency/parallelism if we wish to enable scaleability. 
 
-#TODO: Does it matter if we communicate with a single domain or more than one?  
-#TODO: Does creating a number of sessions equal to the number of cores makes things better or worse?  
-1. Use a single shared session for all of the web requests to the wikipedia domain
+
+
+1. Use a single shared session for all of the web requests to the wikipedia domain  
+   #TODO: Speed-wise, Does it matter if we communicate with a single domain or more than one?  
+         Should I change the settings of the web-requests session object?     
 2. Use a multi-processing pool - distribute the independent tasks of parsing the rows between them (These are "CPU-bounded" jobs), each process doesn't need to know about/have access to the rows processed by other processes (which fits the fact that processes don't share memory by default)
-3. Transform the rest of the synchronic web requests (Getting other wiki pages and animals images) into async ones
+3. Transform the rest of the synchronic web requests (Getting other wiki pages + downloding animals images) and writing to files operations into async ones
 4. Wait for all tasks & processes to finish
-5. Start plotting the output of the "group_by" request from our DB While. Try to create the html output at same time.
+5. Start plotting the output of the "group_by" request from our DB While creating the html output at same time (they are independent on each other)
 
-N = Number of listed animals on the wikipedia page
-
-**Time complexity:**  
+**Time complexity:**  [#TODO: update]
+N = Number of listed animals on the wikipedia page, M = total number of collateral adjectives
 Async solution: O(N) + O(Max(image_download_times)) [The async part]  
 Async+Multiprocessing solution (theoretically better) : O(Max(CPU_BOUND_TASKS))+O(Max(IO_BOUND_TASKS))
 
-**Space complexity:** O(N) [One record for each animal]
+**Space complexity:** [#TODO: update] O(N) [One record for each animal]
 
 # Design & rules of thumbs
 Use one or more from the well trusted software design principles
@@ -69,8 +70,10 @@ While fixing bugs is easier with a single threaded synchronic application (Other
 
 Using OOP in Python is a matter of taste and not a must.
 
+----------------------------------------------------------------
 # Results:
-- Latest Async implementation -**114 seconds < 2 minutes including downloading all the images (677 MB)**, 1.5 sec for parsing with caching and about 30  seconds or less for getting all animals pages for extracting images links without downloading the images. (I didn't benchmark it after optimizations due to code modifications such as caching images names according to the animal name)   
+- Latest Async implementation -**114 seconds < 2 minutes including downloading all the images (677 MB)**, 1.5 sec for execitopm with caching enabled and about 30  seconds or less for getting all animals pages for extracting images links without downloading the images = getting the links of the images even though we won't download them (I didn't benchmark it after optimizations due to code modifications such as caching images names according to the animal name) .  
+- The full async implementation (v3) gave about x2 speedup.
 
 ## Running the code (V3-Async On Linux):
 ```
@@ -82,33 +85,32 @@ python3 main.py
 ---------------------
 ## TODO: 
 - Can we benefit from inheritance (OOP) in this case?
-- How would you give the "requests sender function" access to the session object in a smart way? (sharing a datastructure without using global variable / class attribute)   
+- How would you give the "requests sender function" access to the session object in a smarter way? (sharing a datastructure without using global variable / class attribute)   
 - Is it possible here to seperate the API from the implementation?
-- Would you seperate the generic "utilities" from the specific "Wikipedia"/"Animals page parser" code?
+- Look for remaining places where we can seperate generic "utilities" from the specific "Wikipedia"/"Animals page parser" code (for future code-reuse)
 
 ## Testing
-Pytest might don't work properly with async code.
+Pytest might won't work properly with async code.
 * pytest-asyncio (v0.16.0)
 
 ## Optimizations
 * grequests - too old/unstable but seems to be a "quick and dirty" solution
-* multiprocessing.apply_async / or equivalent from the more recommended: concurrent.futures.ProcessPoolExecutor() () - [Documentation](https://docs.python.org/3/library/multiprocessing.html), [StackOverflow thread](https://stackoverflow.com/questions/8533318/multiprocessing-pool-when-to-use-apply-apply-async-or-map) - seems to solve the constraint of having to change the whole code in order to work asynchronously.
+* multiprocessing.apply_async / or equivalent from the more recommended: concurrent.futures.ProcessPoolExecutor() - [Documentation](https://docs.python.org/3/library/multiprocessing.html), [StackOverflow thread](https://stackoverflow.com/questions/8533318/multiprocessing-pool-when-to-use-apply-apply-async-or-map) - seems to solve the constraint of having to change the whole code in order to work asynchronously.
 * aiohttp - used here as an async http requests library
 * aiofiles - used here as an async File I/O operation library 
 * uvloop - using it's event-loop instead of asyncio's main_loop (more suitable for production environment) [Doesn't support Windows!]
 * aiomultiprocess (v0.9.0) - ?
 * [unsync - Unsynchronize asyncio by using an ambient event loop, or executing in separate threads or processes.](https://github.com/alex-sherman/unsync/)
 
-## Reducing boilerplate code / Doing it easier & faster
+## Reducing boilerplate code / Doing it easier & faster and maybe even give better performance
 * Trio
 * AnyIO 
 * Fastapi (while probabely having to run it as a **web server app** due to the "routing requests" API mechanism)
 * [Example for using wikipediaapi library + grequests](https://github.com/DanOren/Web_Scraping_Project_ITC/blob/main/URL_scraper.py)
-* 
 ## Trade-offs
 
 
-Aiomultiprocess:  
+The aiomultiprocess pitch:  
 ![image](https://user-images.githubusercontent.com/26879273/145200762-d4ac346c-a7d0-4fa1-8979-0f34eb351f82.png)
 
 
